@@ -1,6 +1,6 @@
 // Backend API Base URLs
 // export const BASE_URL = 'http://localhost:5000';
-export const BASE_URL = 'https://beatly-backend-hpdjh7grfgh0eddy.uksouth-01.azurewebsites.net';
+export const BASE_URL = 'https://beatly-backend-bte0acbfdehqdqdj.germanywestcentral-01.azurewebsites.net';
 
 // Specific Endpoint URLs
 export const ENDPOINTS = {
