@@ -1,0 +1,30 @@
+{
+    "routes": [
+        {
+            "route": "/api/*",
+            "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+            "allowedRoles": ["anonymous", "authenticated"]
+        },
+        {
+            "route": "/*",
+            "serve": "/index.html",
+            "statusCode": 200
+        }
+    ],
+    "navigationFallback": {
+        "rewrite": "/index.html",
+        "exclude": [
+            "/api/*",
+            "/static/*",
+            "/public/*"
+        ]
+    },
+    "responseOverrides": {
+        "400": {
+            "rewrite": "/index.html"
+        },
+        "404": {
+            "rewrite": "/index.html"
+        }
+    }
+}

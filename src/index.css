@@ -1,0 +1,182 @@
+:root {
+  /* Yellow and White Theme */
+  --primary-yellow: #FFD700;
+  --secondary-yellow: #FFC107;
+  --background-white: #FFFFFF;
+  --text-black: #333333;
+  --accent-gray: #F5F5F5;
+  
+  /* Typography */
+  --font-primary: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+  --font-size-base: 16px;
+  --font-weight-light: 300;
+  --font-weight-regular: 400;
+  --font-weight-bold: 700;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: var(--font-primary);
+  background-color: var(--background-white);
+  color: var(--text-black);
+  line-height: 1.6;
+  font-size: var(--font-size-base);
+}
+
+/* Elegant Button Styles */
+.btn {
+  display: inline-block;
+  padding: 12px 24px;
+  background-color: var(--primary-yellow);
+  color: var(--text-black);
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: var(--font-weight-bold);
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.btn:hover {
+  background-color: var(--secondary-yellow);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Form Styles */
+.form-control {
+  width: 100%;
+  padding: 12px 16px;
+  border: 2px solid var(--accent-gray);
+  border-radius: 8px;
+  font-size: var(--font-size-base);
+  transition: border-color 0.3s ease;
+}
+
+.form-control:focus {
+  outline: none;
+  border-color: var(--primary-yellow);
+}
+
+/* Card Styles */
+.card {
+  background-color: var(--background-white);
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  padding: 20px;
+  margin-bottom: 20px;
+  transition: transform 0.3s ease;
+}
+
+.card:hover {
+  transform: scale(1.02);
+}
+
+/* Typography */
+h1, h2, h3 {
+  margin-bottom: 16px;
+  font-weight: var(--font-weight-bold);
+}
+
+h1 { font-size: 2.5rem; }
+h2 { font-size: 2rem; }
+h3 { font-size: 1.5rem; }
+
+/* Responsive Typography */
+@media (max-width: 768px) {
+  h1 { font-size: 2rem; }
+  h2 { font-size: 1.5rem; }
+  h3 { font-size: 1.25rem; }
+}
+
+/* Utility Classes */
+.text-center { text-align: center; }
+.text-yellow { color: var(--primary-yellow); }
+.bg-yellow { background-color: var(--primary-yellow); }
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.fade-in {
+  animation: fadeIn 0.5s ease-in;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+/* Authentication Styles */
+.auth-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: var(--background-white);
+  padding: 20px;
+}
+
+.auth-card {
+  width: 100%;
+  max-width: 400px;
+  background-color: var(--background-white);
+  border: 2px solid var(--primary-yellow);
+  box-shadow: 0 8px 16px rgba(255, 215, 0, 0.1);
+  border-radius: 16px;
+  padding: 40px;
+  animation: fadeIn 0.5s ease-out;
+}
+
+.auth-card h2 {
+  color: var(--text-black);
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-label {
+  display: block;
+  margin-bottom: 8px;
+  color: var(--text-black);
+  font-weight: var(--font-weight-bold);
+}
+
+.btn-block {
+  width: 100%;
+  margin-top: 20px;
+}
+
+.error-message {
+  color: #dc3545;
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+.auth-footer {
+  text-align: center;
+  margin-top: 20px;
+  color: var(--text-black);
+}
+
+.auth-footer a {
+  color: var(--primary-yellow);
+  text-decoration: none;
+  font-weight: var(--font-weight-bold);
+  transition: color 0.3s ease;
+}
+
+.auth-footer a:hover {
+  color: var(--secondary-yellow);
+}
