@@ -12,6 +12,7 @@ import ConsumerHome from './pages/ConsumerHome';
 import ConsumerVideoDetails from './pages/ConsumerVideoDetails';
 import AuthService from './services/authService';
 
+
 // Custom theme
 const theme = extendTheme({
   colors: {
