@@ -20,10 +20,12 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: '22.x'
-          cache: 'npm'
 
+      - name: Clean package lock
+        run: rm -f package-lock.json
+        
       - name: Install dependencies
-        run: npm ci
+        run: npm install
 
       - name: Build application
         run: npm run build --if-present
