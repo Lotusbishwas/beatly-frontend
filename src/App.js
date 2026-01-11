@@ -12,7 +12,6 @@ import ConsumerHome from './pages/ConsumerHome';
 import ConsumerVideoDetails from './pages/ConsumerVideoDetails';
 import AuthService from './services/authService';
 
-
 // Modern Dark Theme
 const theme = extendTheme({
   config: {
