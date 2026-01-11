@@ -36,16 +36,10 @@ jobs:
       - name: Copy web.config to build
         run: cp public/web.config build/ || echo "web.config not found, skipping"
         
-      - name: Prepare static deployment
+      - name: Prepare deployment package
         run: |
-          rm -f build/package*.json || echo "No package files to remove"
-          rm -rf build/node_modules || echo "No node_modules to remove"
-          echo '[config]' > build/.deployment
-          echo 'command = echo "Static site deployment"' >> build/.deployment
-          echo '#!/bin/sh' > build/deploy.sh
-          echo 'echo "Deploying static React app"' >> build/deploy.sh
-          echo 'echo "Deployment complete"' >> build/deploy.sh
-          chmod +x build/deploy.sh
+          rm -f staticwebapp.config.json || echo "No static web app config to remove"
+          cp package.json build/ || echo "Could not copy package.json to build"
           ls -la build/
 
       - name: Upload artifact for deployment job
@@ -77,6 +71,5 @@ jobs:
         uses: azure/webapps-deploy@v3
         with:
           app-name: 'beatly-frontend'
-          slot-name: 'Production'
-          package: './build'
+          package: '.'
                               
