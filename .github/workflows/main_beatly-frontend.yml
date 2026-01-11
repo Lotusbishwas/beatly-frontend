@@ -39,14 +39,24 @@ jobs:
       - name: Prepare deployment package
         run: |
           rm -f staticwebapp.config.json || echo "No static web app config to remove"
-          cp package.json build/ || echo "Could not copy package.json to build"
-          ls -la build/
+          # Keep package.json in root and copy serve dependency info
+          echo '{
+            "name": "beatly-frontend", 
+            "version": "1.0.0",
+            "scripts": {
+              "start": "serve -s build -p 8080"
+            },
+            "dependencies": {
+              "serve": "^14.2.5"
+            }
+          }' > package.json
+          ls -la .
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
         with:
           name: react-build
-          path: build/
+          path: .
 
   deploy:
     runs-on: ubuntu-latest
