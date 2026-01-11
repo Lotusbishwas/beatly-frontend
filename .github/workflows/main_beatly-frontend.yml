@@ -62,4 +62,4 @@ jobs:
           app-name: 'beatly-frontend'
           slot-name: 'Production'
           package: .
-          
+                              
