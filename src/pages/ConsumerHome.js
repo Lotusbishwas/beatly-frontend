@@ -41,21 +41,38 @@ import ConsumerLayout from '../layouts/ConsumerLayout';
 import {ENDPOINTS} from '../utils/apiConfig';
 
 const VideoCard = ({ video, onClick }) => {
-  console.log('Video:', video);
-
   return (
     <Box 
-      borderWidth="1px" 
-      borderRadius="lg" 
+      bg="brand.gray.800"
+      borderRadius="2xl" 
       overflow="hidden" 
-      boxShadow="md"
-      transition="transform 0.2s"
+      border="1px solid"
+      borderColor="brand.gray.700"
+      transition="all 0.3s ease"
       _hover={{ 
-        transform: 'scale(1.02)',
-        boxShadow: 'lg',
-        cursor: 'pointer'
+        transform: 'translateY(-8px)',
+        boxShadow: '0 20px 40px rgba(0, 0, 0, 0.4)',
+        borderColor: 'brand.primary',
+        cursor: 'pointer',
+        _before: {
+          opacity: 1
+        }
       }}
       onClick={onClick}
+      position="relative"
+      _before={{
+        content: '""',
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        borderRadius: '2xl',
+        background: 'linear-gradient(135deg, rgba(99,102,241,0.1) 0%, rgba(139,92,246,0.1) 100%)',
+        opacity: 0,
+        transition: 'opacity 0.3s ease',
+        zIndex: -1
+      }}
     >
       {/* Video Thumbnail */}
       <Box position="relative">
@@ -64,46 +81,57 @@ const VideoCard = ({ video, onClick }) => {
           alt={video.title}
           objectFit="cover"
           width="full"
-          height="200px"
-          fallbackSrc="https://via.placeholder.com/300x200"
+          height="220px"
+          fallbackSrc="https://via.placeholder.com/300x220"
           onError={(e) => {
             console.error('Thumbnail load error:', e);
-            e.target.src = 'https://via.placeholder.com/300x200';
+            e.target.src = 'https://via.placeholder.com/300x220';
           }}
+        />
+        <Box
+          position="absolute"
+          top={0}
+          left={0}
+          right={0}
+          bottom={0}
+          bgGradient="linear(to-t, blackAlpha.800, transparent)"
+          opacity={0}
+          transition="opacity 0.3s ease"
+          _hover={{ opacity: 1 }}
         />
       </Box>
 
       {/* Video Details */}
-      <Box p={4}>
-        <Heading size="md" mb={4} noOfLines={1}>
+      <Box p={6}>
+        <Heading size="md" mb={4} noOfLines={2} color="white" fontWeight="bold">
           {video.title}
         </Heading>
 
         {/* Video Statistics */}
-        <HStack spacing={4} justifyContent="space-between">
-          <Stat>
-            <StatLabel>
-              <Icon as={FaEye} mr={2} color="gray.500" />
-              Views
-            </StatLabel>
-            <StatNumber>{video.views || 0}</StatNumber>
-          </Stat>
+        <HStack spacing={6} justifyContent="space-between">
+          <VStack spacing={1} align="start">
+            <HStack>
+              <Icon as={FaEye} color="brand.accent" size="14px" />
+              <Text fontSize="xs" color="gray.400">Views</Text>
+            </HStack>
+            <Text fontSize="sm" fontWeight="semibold" color="white">{video.views || 0}</Text>
+          </VStack>
 
-          <Stat>
-            <StatLabel>
-              <Icon as={FaComment} mr={2} color="blue.500" />
-              Comments
-            </StatLabel>
-            <StatNumber>{video.comments?.length || 0}</StatNumber>
-          </Stat>
+          <VStack spacing={1} align="start">
+            <HStack>
+              <Icon as={FaComment} color="brand.secondary" size="14px" />
+              <Text fontSize="xs" color="gray.400">Comments</Text>
+            </HStack>
+            <Text fontSize="sm" fontWeight="semibold" color="white">{video.comments?.length || 0}</Text>
+          </VStack>
 
-          <Stat>
-            <StatLabel>
-              <Icon as={FaHeart} mr={2} color="red.500" />
-              Likes
-            </StatLabel>
-            <StatNumber>{video.likes || 0}</StatNumber>
-          </Stat>
+          <VStack spacing={1} align="start">
+            <HStack>
+              <Icon as={FaHeart} color="brand.error" size="14px" />
+              <Text fontSize="xs" color="gray.400">Likes</Text>
+            </HStack>
+            <Text fontSize="sm" fontWeight="semibold" color="white">{video.likes || 0}</Text>
+          </VStack>
         </HStack>
       </Box>
     </Box>
@@ -226,93 +254,118 @@ const ConsumerHome = () => {
 
   return (
     <ConsumerLayout>
-      <Box p={5}>
-        <Heading mb={6}>Discover Videos</Heading>
+      <Box 
+        p={8} 
+        bg="brand.dark" 
+        minHeight="100vh"
+      >
+        <Box mb={8}>
+          <Heading 
+            size="xl" 
+            bgGradient="linear(to-r, brand.primary, brand.secondary)"
+            bgClip="text"
+            fontWeight="bold"
+            mb={2}
+          >
+            Discover Videos
+          </Heading>
+          <Text color="gray.400" fontSize="lg">
+            Explore trending content on Beatly
+          </Text>
+        </Box>
         
         {/* Filtering and Pagination Controls */}
-        <HStack spacing={4} mb={6}>
+        <HStack spacing={4} mb={8}>
           <Select 
             placeholder="Sort By" 
-            width="200px"
+            width="220px"
             onChange={handleSortChange}
+            bg="brand.gray.800"
+            borderColor="brand.gray.700"
+            color="white"
+            _hover={{ borderColor: 'brand.primary' }}
+            _focus={{ borderColor: 'brand.primary', boxShadow: '0 0 0 1px rgba(99, 102, 241, 0.4)' }}
           >
-            <option value="createdAt|desc">Most Recent</option>
-            <option value="createdAt|asc">Oldest First</option>
-            <option value="views|desc">Most Viewed</option>
+            <option value="createdAt|desc" style={{ background: '#1E293B', color: 'white' }}>Most Recent</option>
+            <option value="createdAt|asc" style={{ background: '#1E293B', color: 'white' }}>Oldest First</option>
+            <option value="views|desc" style={{ background: '#1E293B', color: 'white' }}>Most Viewed</option>
           </Select>
 
           <Select 
             placeholder="Videos per Page" 
-            width="150px"
+            width="180px"
             onChange={handleLimitChange}
             value={filters.limit}
+            bg="brand.gray.800"
+            borderColor="brand.gray.700"
+            color="white"
+            _hover={{ borderColor: 'brand.primary' }}
+            _focus={{ borderColor: 'brand.primary', boxShadow: '0 0 0 1px rgba(99, 102, 241, 0.4)' }}
           >
-            <option value={20}>20 Videos</option>
-            <option value={50}>50 Videos</option>
-            <option value={100}>100 Videos</option>
+            <option value={20} style={{ background: '#1E293B', color: 'white' }}>20 Videos</option>
+            <option value={50} style={{ background: '#1E293B', color: 'white' }}>50 Videos</option>
+            <option value={100} style={{ background: '#1E293B', color: 'white' }}>100 Videos</option>
           </Select>
         </HStack>
 
         {/* Video Grid */}
-        <Grid templateColumns="repeat(auto-fill, minmax(250px, 1fr))" gap={6}>
+        <Grid templateColumns="repeat(auto-fill, minmax(320px, 1fr))" gap={8}>
           {videos.map(video => (
-            <GridItem 
-              key={video._id} 
-              onClick={() => handleVideoClick(video._id)} 
-              cursor="pointer"
-            >
-              <Box 
-                borderWidth="1px" 
-                borderRadius="lg" 
-                overflow="hidden"
-                transition="transform 0.2s"
-                _hover={{ transform: 'scale(1.05)' }}
-              >
-                <Image 
-                  src={video.thumbnail} 
-                  alt={video.title}
-                  objectFit="cover"
-                  width="100%"
-                  height="200px"
-                />
-                <Box p={4}>
-                  <Text fontWeight="bold" mb={2}>{video.title}</Text>
-                  <Text color="gray.500" fontSize="sm">
-                    Uploaded on {video.createdAt ? new Date(video.createdAt).toLocaleDateString() : 'Unknown Date'}
-                  </Text>
-                </Box>
-              </Box>
-            </GridItem>
+            <VideoCard
+              key={video._id}
+              video={video}
+              onClick={() => handleVideoClick(video._id)}
+            />
           ))}
         </Grid>
 
         {/* Pagination Controls */}
-        <Flex justify="center" mt={6}>
-          <HStack spacing={2}>
+        <Flex justify="center" mt={10}>
+          <HStack spacing={4}>
             <Button 
               onClick={() => handlePageChange(1)}
               isDisabled={pagination.currentPage == 1}
+              variant="outline"
+              borderColor="brand.primary"
+              color="brand.primary"
+              _hover={{ bg: 'brand.primary', color: 'white' }}
+              _disabled={{ opacity: 0.4, cursor: 'not-allowed' }}
             >
               First
             </Button>
             <Button 
               onClick={() => handlePageChange(pagination.currentPage - 1)}
               isDisabled={pagination.currentPage == 1}
+              variant="outline"
+              borderColor="brand.primary"
+              color="brand.primary"
+              _hover={{ bg: 'brand.primary', color: 'white' }}
+              _disabled={{ opacity: 0.4, cursor: 'not-allowed' }}
             >
               Previous
             </Button>
-            <Text>
+            <Text color="gray.300" fontSize="lg" fontWeight="semibold">
               Page {pagination.currentPage} of {pagination.totalPages}
             </Text>
             <Button 
               onClick={() => handlePageChange(pagination.currentPage + 1)}
               isDisabled={pagination.currentPage == pagination.totalPages}
+              variant="outline"
+              borderColor="brand.primary"
+              color="brand.primary"
+              _hover={{ bg: 'brand.primary', color: 'white' }}
+              _disabled={{ opacity: 0.4, cursor: 'not-allowed' }}
             >
               Next
             </Button>
             <Button 
               onClick={() => handlePageChange(pagination.totalPages)}
               isDisabled={pagination.currentPage == pagination.totalPages}
+              variant="outline"
+              borderColor="brand.primary"
+              color="brand.primary"
+              _hover={{ bg: 'brand.primary', color: 'white' }}
+              _disabled={{ opacity: 0.4, cursor: 'not-allowed' }}
             >
               Last
             </Button>

@@ -242,35 +242,64 @@ const AdminDashboard = () => {
   return (
     <HStack spacing={0} height="100vh">
       <Sidebar />
-      <Box flex={1} overflowY="auto" p={5}>
-        <Heading mb={6}>Video Management</Heading>
+      <Box 
+        flex={1} 
+        overflowY="auto" 
+        p={8}
+        bg="brand.dark"
+        minHeight="100vh"
+      >
+        <Box mb={8}>
+          <Heading 
+            size="xl" 
+            bgGradient="linear(to-r, brand.primary, brand.secondary)"
+            bgClip="text"
+            fontWeight="bold"
+            mb={2}
+          >
+            Video Management
+          </Heading>
+          <Text color="gray.400" fontSize="lg">
+            Manage and monitor your platform content
+          </Text>
+        </Box>
         
         {/* Filtering and Pagination Controls */}
-        <HStack spacing={4} mb={6}>
+        <HStack spacing={4} mb={8}>
           <Select 
             placeholder="Sort By" 
-            width="200px"
+            width="220px"
             onChange={handleSortChange}
+            bg="brand.gray.800"
+            borderColor="brand.gray.700"
+            color="white"
+            _hover={{ borderColor: 'brand.primary' }}
+            _focus={{ borderColor: 'brand.primary', boxShadow: '0 0 0 1px rgba(99, 102, 241, 0.4)' }}
           >
-            <option value="createdAt|desc">Most Recent</option>
-            <option value="createdAt|asc">Oldest First</option>
-            <option value="views|desc">Most Viewed</option>
+            <option value="createdAt|desc" style={{ background: '#1E293B', color: 'white' }}>Most Recent</option>
+            <option value="createdAt|asc" style={{ background: '#1E293B', color: 'white' }}>Oldest First</option>
+            <option value="views|desc" style={{ background: '#1E293B', color: 'white' }}>Most Viewed</option>
           </Select>
 
           <Select 
             placeholder="Videos per Page" 
-            width="150px"
+            width="180px"
             onChange={handleLimitChange}
             value={filters.limit}
+            bg="brand.gray.800"
+            borderColor="brand.gray.700"
+            color="white"
+            _hover={{ borderColor: 'brand.primary' }}
+            _focus={{ borderColor: 'brand.primary', boxShadow: '0 0 0 1px rgba(99, 102, 241, 0.4)' }}
           >
-            <option value={20}>20 Videos</option>
-            <option value={50}>50 Videos</option>
-            <option value={100}>100 Videos</option>
+            <option value={20} style={{ background: '#1E293B', color: 'white' }}>20 Videos</option>
+            <option value={50} style={{ background: '#1E293B', color: 'white' }}>50 Videos</option>
+            <option value={100} style={{ background: '#1E293B', color: 'white' }}>100 Videos</option>
           </Select>
         </HStack>
 
         {/* Video Grid */}
-        <Grid templateColumns="repeat(auto-fill, minmax(250px, 1fr))" gap={6}>
+        <Grid templateColumns="repeat(auto-fill, minmax(320px, 1fr))" gap={8}>
           {videos.map(video => (
             <GridItem 
               key={video._id} 
@@ -278,30 +307,75 @@ const AdminDashboard = () => {
               cursor="pointer"
             >
               <Box 
-                borderWidth="1px" 
-                borderRadius="lg" 
+                bg="brand.gray.800"
+                borderRadius="2xl" 
                 overflow="hidden"
-                transition="transform 0.2s"
-                _hover={{ transform: 'scale(1.05)' }}
+                border="1px solid"
+                borderColor="brand.gray.700"
+                transition="all 0.3s ease"
+                _hover={{ 
+                  transform: 'translateY(-8px)', 
+                  boxShadow: '0 20px 40px rgba(0, 0, 0, 0.4)',
+                  borderColor: 'brand.primary',
+                  _before: {
+                    opacity: 1
+                  }
+                }}
+                position="relative"
+                _before={{
+                  content: '""',
+                  position: 'absolute',
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  bottom: 0,
+                  borderRadius: '2xl',
+                  background: 'linear-gradient(135deg, rgba(99,102,241,0.1) 0%, rgba(139,92,246,0.1) 100%)',
+                  opacity: 0,
+                  transition: 'opacity 0.3s ease',
+                  zIndex: -1
+                }}
               >
-                <Image 
-                  src={video.thumbnail} 
-                  alt={video.title}
-                  objectFit="cover"
-                  width="100%"
-                  height="200px"
-                />
-                <Box p={4}>
-                  <Text fontWeight="bold" mb={2}>{video.title}</Text>
-                  <Text color="gray.500" fontSize="sm">
+                <Box position="relative">
+                  <Image 
+                    src={video.thumbnail} 
+                    alt={video.title}
+                    objectFit="cover"
+                    width="100%"
+                    height="220px"
+                  />
+                  <Box
+                    position="absolute"
+                    top={0}
+                    left={0}
+                    right={0}
+                    bottom={0}
+                    bgGradient="linear(to-t, blackAlpha.800, transparent)"
+                    opacity={0}
+                    transition="opacity 0.3s ease"
+                    _hover={{ opacity: 1 }}
+                  />
+                </Box>
+                <Box p={6}>
+                  <Text fontWeight="bold" mb={3} fontSize="lg" color="white" noOfLines={2}>
+                    {video.title}
+                  </Text>
+                  <Text color="gray.400" fontSize="sm" mb={4}>
                     Uploaded on {video.createdAt ? new Date(video.createdAt).toLocaleDateString() : 'Unknown Date'}
                   </Text>
                   <Button 
                     leftIcon={<FaTrash />}
+                    size="sm"
+                    variant="outline"
                     colorScheme="red"
-                    variant="solid"
+                    borderRadius="lg"
+                    _hover={{ 
+                      bg: 'red.500',
+                      color: 'white',
+                      transform: 'translateY(-1px)'
+                    }}
                     onClick={(e) => {
-                      e.stopPropagation(); // Prevent triggering video stats modal
+                      e.stopPropagation();
                       setVideoToDelete(video._id);
                       onDeleteDialogOpen();
                     }}
@@ -315,20 +389,30 @@ const AdminDashboard = () => {
         </Grid>
 
         {/* Pagination Controls */}
-        <Flex justify="center" mt={6}>
-          <HStack spacing={2}>
+        <Flex justify="center" mt={10}>
+          <HStack spacing={4}>
             <Button 
               onClick={() => handlePageChange(pagination.currentPage - 1)}
               isDisabled={pagination.currentPage === 1}
+              variant="outline"
+              borderColor="brand.primary"
+              color="brand.primary"
+              _hover={{ bg: 'brand.primary', color: 'white' }}
+              _disabled={{ opacity: 0.4, cursor: 'not-allowed' }}
             >
               Previous
             </Button>
-            <Text>
+            <Text color="gray.300" fontSize="lg" fontWeight="semibold">
               Page {pagination.currentPage} of {pagination.totalPages}
             </Text>
             <Button 
               onClick={() => handlePageChange(pagination.currentPage + 1)}
               isDisabled={pagination.currentPage === pagination.totalPages}
+              variant="outline"
+              borderColor="brand.primary"
+              color="brand.primary"
+              _hover={{ bg: 'brand.primary', color: 'white' }}
+              _disabled={{ opacity: 0.4, cursor: 'not-allowed' }}
             >
               Next
             </Button>
@@ -336,11 +420,19 @@ const AdminDashboard = () => {
         </Flex>
 
         {/* Video Stats Modal */}
-        <Modal isOpen={isVideoStatsOpen} onClose={onVideoStatsClose} size="xl">
-          <ModalOverlay />
-          <ModalContent>
-            <ModalHeader>Video Statistics</ModalHeader>
-            <ModalCloseButton />
+        <Modal isOpen={isVideoStatsOpen} onClose={onVideoStatsClose} size="xl" isCentered>
+          <ModalOverlay bg="blackAlpha.600" backdropFilter="blur(10px)" />
+          <ModalContent bg="brand.gray.800" borderColor="brand.gray.700" border="1px solid">
+            <ModalHeader 
+              bgGradient="linear(to-r, brand.primary, brand.secondary)"
+              bgClip="text"
+              color="white"
+              borderBottom="1px solid"
+              borderColor="brand.gray.700"
+            >
+              Video Statistics
+            </ModalHeader>
+            <ModalCloseButton color="gray.400" _hover={{ color: 'white' }} />
             <ModalBody>
               {selectedVideo && (
                 <VStack spacing={4} align="stretch">

@@ -1,6 +1,17 @@
 import React, { useState } from 'react';
 import AuthService from '../services/authService';
 import { useNavigate } from 'react-router-dom';
+import {
+  Box,
+  Button,
+  VStack,
+  FormControl,
+  FormLabel,
+  Input,
+  Text,
+  useToast,
+  Flex
+} from '@chakra-ui/react';
 
 function ConsumerSignup() {
   const [name, setName] = useState('');
@@ -9,6 +20,7 @@ function ConsumerSignup() {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
   const navigate = useNavigate();
+  const toast = useToast();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -17,80 +29,175 @@ function ConsumerSignup() {
     // Basic validation
     if (password !== confirmPassword) {
       setError('Passwords do not match');
+      toast({
+        title: "Validation Error",
+        description: "Passwords do not match",
+        status: "error",
+        duration: 3000,
+        isClosable: true
+      });
       return;
     }
 
     try {
       await AuthService.register(name, email, password, 'consumer');
+      toast({
+        title: "Account Created",
+        description: "Your account has been created successfully",
+        status: "success",
+        duration: 3000,
+        isClosable: true
+      });
       navigate('/login');
     } catch (err) {
       setError(err.message || 'Signup failed');
+      toast({
+        title: "Signup Error",
+        description: err.message || 'Signup failed',
+        status: "error",
+        duration: 3000,
+        isClosable: true
+      });
     }
   };
 
   return (
-    <div className="auth-container">
-      <div className="auth-card card">
-        <h2 className="text-center">Create Your Account</h2>
-        <form onSubmit={handleSubmit}>
-          <div className="form-group">
-            <label htmlFor="name" className="form-label">Full Name</label>
-            <input
+    <Box 
+      display="flex" 
+      justifyContent="center" 
+      alignItems="center" 
+      minHeight="100vh"
+      bgGradient="linear(135deg, brand.dark 0%, brand.darker 100%)"
+      position="relative"
+      _before={{
+        content: '""',
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        bgGradient: 'radial(circle at 30% 40%, brand.secondary 0%, transparent 50%), radial(circle at 70% 80%, brand.primary 0%, transparent 50%)',
+        opacity: 0.1
+      }}
+    >
+      <Box 
+        width="480px" 
+        p={10} 
+        borderRadius="3xl" 
+        boxShadow="2xl"
+        bg="brand.gray.800"
+        border="1px solid"
+        borderColor="brand.gray.700"
+        position="relative"
+        _before={{
+          content: '""',
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          borderRadius: '3xl',
+          background: 'linear-gradient(135deg, rgba(139,92,246,0.1) 0%, rgba(99,102,241,0.1) 100%)',
+          zIndex: -1
+        }}
+      >
+        <VStack spacing={6} as="form" onSubmit={handleSubmit}>
+          <Box textAlign="center" mb={2}>
+            <Text 
+              fontSize="3xl" 
+              fontWeight="bold" 
+              bgGradient="linear(to-r, brand.secondary, brand.primary)"
+              bgClip="text"
+              mb={2}
+            >
+              Join Beatly
+            </Text>
+            <Text fontSize="sm" color="gray.400">
+              Create your account and start exploring
+            </Text>
+          </Box>
+
+          <FormControl id="name" isRequired>
+            <FormLabel color="gray.300" fontWeight="semibold">Full Name</FormLabel>
+            <Input
               type="text"
-              id="name"
-              className="form-control"
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder="Enter your full name"
-              required
+              size="lg"
+              borderRadius="xl"
             />
-          </div>
-          <div className="form-group">
-            <label htmlFor="email" className="form-label">Email</label>
-            <input
+          </FormControl>
+
+          <FormControl id="email" isRequired>
+            <FormLabel color="gray.300" fontWeight="semibold">Email</FormLabel>
+            <Input
               type="email"
-              id="email"
-              className="form-control"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="Enter your email"
-              required
+              size="lg"
+              borderRadius="xl"
             />
-          </div>
-          <div className="form-group">
-            <label htmlFor="password" className="form-label">Password</label>
-            <input
+          </FormControl>
+
+          <FormControl id="password" isRequired>
+            <FormLabel color="gray.300" fontWeight="semibold">Password</FormLabel>
+            <Input
               type="password"
-              id="password"
-              className="form-control"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="Create a strong password"
-              required
               minLength="8"
+              size="lg"
+              borderRadius="xl"
             />
-          </div>
-          <div className="form-group">
-            <label htmlFor="confirm-password" className="form-label">Confirm Password</label>
-            <input
+          </FormControl>
+
+          <FormControl id="confirm-password" isRequired>
+            <FormLabel color="gray.300" fontWeight="semibold">Confirm Password</FormLabel>
+            <Input
               type="password"
-              id="confirm-password"
-              className="form-control"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
               placeholder="Repeat your password"
-              required
               minLength="8"
+              size="lg"
+              borderRadius="xl"
             />
-          </div>
-          {error && <div className="error-message">{error}</div>}
-          <button type="submit" className="btn btn-block">Sign Up</button>
-        </form>
-        <div className="auth-footer">
-          <p>Already have an account? <a href="/login" className="text-yellow">Login</a></p>
-        </div>
-      </div>
-    </div>
+          </FormControl>
+
+          {error && (
+            <Text color="brand.error" textAlign="center" fontSize="sm">
+              {error}
+            </Text>
+          )}
+
+          <Button 
+            variant="gradient"
+            width="full" 
+            type="submit"
+            size="lg"
+            fontSize="md"
+            fontWeight="bold"
+          >
+            Create Account
+          </Button>
+
+          <Text color="gray.400" fontSize="sm">
+            Already have an account? <Button 
+              variant="link" 
+              color="brand.primary"
+              fontWeight="semibold"
+              _hover={{ color: 'brand.secondary' }}
+              onClick={() => navigate('/login')}
+            >
+              Sign In
+            </Button>
+          </Text>
+        </VStack>
+      </Box>
+    </Box>
   );
 }
 

@@ -36,7 +36,7 @@ import AuthService from '../services/authService';
 import axiosInstance from '../utils/axiosConfig';
 import { ENDPOINTS } from '../utils/apiConfig';
 
-const SidebarItem = ({ icon, label, to, onClick }) => {
+const SidebarItem = ({ icon, label, to, onClick, isActive }) => {
   return (
     <Flex
       as={Link}
@@ -44,15 +44,32 @@ const SidebarItem = ({ icon, label, to, onClick }) => {
       onClick={onClick}
       alignItems="center"
       width="full"
-      p={3}
-      borderRadius="md"
+      p={4}
+      borderRadius="xl"
+      position="relative"
       _hover={{
-        bg: 'yellow.100',
-        color: 'yellow.700'
+        bg: 'brand.gray.700',
+        color: 'white',
+        transform: 'translateX(4px)'
+      }}
+      bg={isActive ? 'brand.primary' : 'transparent'}
+      color={isActive ? 'white' : 'gray.300'}
+      transition="all 0.3s ease"
+      _before={{
+        content: '""',
+        position: 'absolute',
+        left: 0,
+        top: '50%',
+        transform: 'translateY(-50%)',
+        width: '4px',
+        height: isActive ? '100%' : '0%',
+        bg: 'brand.accent',
+        borderRadius: 'full',
+        transition: 'height 0.3s ease'
       }}
     >
-      <Icon as={icon} mr={3} />
-      <Text fontWeight="medium">{label}</Text>
+      <Icon as={icon} mr={3} size="20px" />
+      <Text fontWeight="semibold" fontSize="sm">{label}</Text>
     </Flex>
   );
 };
@@ -209,17 +226,39 @@ const Sidebar = () => {
 
   return (
     <Box
-      width="250px"
+      width="280px"
       height="100vh"
-      bg="yellow.50"
-      p={5}
+      bg="brand.gray.900"
+      p={6}
       borderRight="1px solid"
-      borderColor="gray.200"
+      borderColor="brand.gray.700"
+      position="relative"
+      _before={{
+        content: '""',
+        position: 'absolute',
+        top: 0,
+        right: 0,
+        width: '1px',
+        height: '100%',
+        bgGradient: 'linear(to-b, brand.primary, brand.secondary, brand.accent)',
+        opacity: 0.3
+      }}
     >
-      <VStack spacing={5} align="stretch">
-        <Heading size="md" mb={5} textAlign="center" color="yellow.600">
-          Beatly Dashboard
-        </Heading>
+      <VStack spacing={6} align="stretch">
+        <Box textAlign="center" py={4}>
+          <Heading 
+            size="lg" 
+            bgGradient="linear(to-r, brand.primary, brand.secondary)"
+            bgClip="text"
+            fontWeight="bold"
+            letterSpacing="tight"
+          >
+            Beatly
+          </Heading>
+          <Text fontSize="xs" color="gray.400" mt={1} fontWeight="medium">
+            Media Platform
+          </Text>
+        </Box>
 
         {/* Dashboard Routes */}
         {user?.role === 'consumer' && (
@@ -266,11 +305,26 @@ const Sidebar = () => {
       </VStack>
 
       {/* Upload Video Modal */}
-      <Modal isOpen={isOpen} onClose={onClose}>
-        <ModalOverlay />
-        <ModalContent bg="white" borderRadius="lg">
-          <ModalHeader bg="yellow.50" color="yellow.600">Upload Video</ModalHeader>
-          <ModalCloseButton />
+      <Modal isOpen={isOpen} onClose={onClose} isCentered>
+        <ModalOverlay bg="blackAlpha.600" backdropFilter="blur(10px)" />
+        <ModalContent 
+          bg="brand.gray.800" 
+          borderRadius="2xl"
+          border="1px solid"
+          borderColor="brand.gray.700"
+          boxShadow="xl"
+        >
+          <ModalHeader 
+            bgGradient="linear(to-r, brand.primary, brand.secondary)"
+            bgClip="text"
+            color="white"
+            fontWeight="bold"
+            borderBottom="1px solid"
+            borderColor="brand.gray.700"
+          >
+            Upload Video
+          </ModalHeader>
+          <ModalCloseButton color="gray.400" _hover={{ color: 'white' }} />
           <ModalBody p={6}>
             <form onSubmit={handleSubmit}>
               <VStack spacing={4}>
