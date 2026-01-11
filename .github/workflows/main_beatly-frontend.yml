@@ -39,24 +39,17 @@ jobs:
       - name: Prepare deployment package
         run: |
           rm -f staticwebapp.config.json || echo "No static web app config to remove"
-          # Keep package.json in root and copy serve dependency info
-          echo '{
-            "name": "beatly-frontend", 
-            "version": "1.0.0",
-            "scripts": {
-              "start": "serve -s build -p 8080"
-            },
-            "dependencies": {
-              "serve": "^14.2.5"
-            }
-          }' > package.json
+          # Create proper package.json for Node.js app detection
+          echo '{"name":"beatly-frontend","version":"1.0.0","scripts":{"start":"serve -s build -p 8080"},"dependencies":{"serve":"^14.2.5"},"engines":{"node":"22.x"}}' > package.json
+          # Create a simple server.js file
+          echo 'const serve=require("serve");const path=require("path");const app=serve(path.join(__dirname,"build"),{port:process.env.PORT||8080,hostname:"0.0.0.0"});app.listen(()=>{console.log(`Server running on port ${process.env.PORT||8080}`);});' > server.js
           ls -la .
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
         with:
           name: react-build
-          path: ./build
+          path: .
 
   deploy:
     runs-on: ubuntu-latest
@@ -76,16 +69,18 @@ jobs:
           tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_631881E47FC849AD853C99E0F1E60D16 }}
           subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_74F4B30F71D34520891EAEE266B6A470 }}
 
-      - name: 'Clean App Service before deployment'
+      - name: 'Stop App Service before deployment'
         run: |
-          az webapp config appsettings delete --name beatly-frontend --resource-group ${{ secrets.RESOURCE_GROUP }} --setting-names WEBSITE_RUN_FROM_PACKAGE || echo "No WEBSITE_RUN_FROM_PACKAGE setting found"
+          az webapp stop --name beatly-frontend --resource-group ${{ secrets.RESOURCE_GROUP }} || echo "App already stopped"
 
       - name: 'Deploy to Azure Web App'
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v3
         with:
           app-name: 'beatly-frontend'
-          package: './build'
-          restart-with-app: true
-          enable-static-app: false
+          package: '.'
+
+      - name: 'Start App Service after deployment'
+        run: |
+          az webapp start --name beatly-frontend --resource-group ${{ secrets.RESOURCE_GROUP }}
                               
