@@ -51,14 +51,15 @@ jobs:
       - name: Login to Azure
         uses: azure/login@v2
         with:
-          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_2BC79426B6EF499982B86FC2A618F639 }}
-          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_FAB25E0023EC43F992A7B0F915B236E8 }}
-          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_C3E9CD2D6EDD4E2CA5289B393D90E202 }}
+          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_E6B3948D391F471292758AB3D9B83648 }}
+          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_631881E47FC849AD853C99E0F1E60D16 }}
+          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_74F4B30F71D34520891EAEE266B6A470 }}
 
-      - name: Deploy to Azure Web App
+      - name: 'Deploy to Azure Web App'
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v3
         with:
           app-name: 'beatly-frontend'
           slot-name: 'Production'
-          package: './build'
+          package: .
+          
