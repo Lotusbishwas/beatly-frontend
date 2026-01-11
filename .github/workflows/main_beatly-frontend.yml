@@ -35,6 +35,18 @@ jobs:
           
       - name: Copy web.config to build
         run: cp public/web.config build/ || echo "web.config not found, skipping"
+        
+      - name: Prepare static deployment
+        run: |
+          rm -f build/package*.json || echo "No package files to remove"
+          rm -rf build/node_modules || echo "No node_modules to remove"
+          echo '[config]' > build/.deployment
+          echo 'command = echo "Static site deployment"' >> build/.deployment
+          echo '#!/bin/sh' > build/deploy.sh
+          echo 'echo "Deploying static React app"' >> build/deploy.sh
+          echo 'echo "Deployment complete"' >> build/deploy.sh
+          chmod +x build/deploy.sh
+          ls -la build/
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
