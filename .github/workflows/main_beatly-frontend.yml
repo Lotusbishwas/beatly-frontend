@@ -56,7 +56,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: react-build
-          path: .
+          path: ./build
 
   deploy:
     runs-on: ubuntu-latest
@@ -76,10 +76,16 @@ jobs:
           tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_631881E47FC849AD853C99E0F1E60D16 }}
           subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_74F4B30F71D34520891EAEE266B6A470 }}
 
+      - name: 'Clean App Service before deployment'
+        run: |
+          az webapp config appsettings delete --name beatly-frontend --resource-group ${{ secrets.RESOURCE_GROUP }} --setting-names WEBSITE_RUN_FROM_PACKAGE || echo "No WEBSITE_RUN_FROM_PACKAGE setting found"
+
       - name: 'Deploy to Azure Web App'
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v3
         with:
           app-name: 'beatly-frontend'
-          package: '.'
+          package: './build'
+          restart-with-app: true
+          enable-static-app: false
                               
